@@ -53,3 +53,9 @@ In the project directory, you can run:
 - [Create React App](https://github.com/facebook/create-react-app) - The web framework used
 - [React](https://reactjs.org/) - A JavaScript library for building user interfaces
 - [Axios](https://github.com/axios/axios) - Promise based HTTP client for the browser and node.js
+
+---
+
+## NOTES:
+#### CORS Issues
+- if the `.env` file has e.g. `REACT_APP_BACKEND_ENDPOINT=http://localhost:5000` instead of `REACT_APP_BACKEND_ENDPOINT=http://127.0.0.1:5000` it may cause a CORS error

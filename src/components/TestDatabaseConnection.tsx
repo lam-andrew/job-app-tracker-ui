@@ -5,10 +5,7 @@ const TestDatabaseConnection: React.FC = () => {
     const [data, setData] = useState<string>('Loading...');
 
     useEffect(() => {
-        // Replace URL with your actual backend endpoint that tests the database connection
-        const testDbConnectionUrl = 'http://localhost:5000/test-connection';
-
-        axios.get(testDbConnectionUrl)
+        axios.get(`${process.env.REACT_APP_BACKEND_ENDPOINT}/test-connection`)
             .then(response => {
                 setData(`Success: ${JSON.stringify(response.data)}`);
             })

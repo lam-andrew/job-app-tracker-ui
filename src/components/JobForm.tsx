@@ -74,7 +74,7 @@ const JobForm: React.FC = () => {
                         onChange={(e) => setJobDesc(e.target.value)}
                     />
                 </div>
-                <button type="submit" className="bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" disabled={loading}>
+                <button type="submit" className="text-white bg-indigo-600 hover:bg-indigo-700 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" disabled={loading}>
                     {loading ? <Spinner /> : 'Submit'}
                 </button>
             </form>

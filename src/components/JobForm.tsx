@@ -34,8 +34,8 @@ interface JobJsonResponse {
 
 interface ApiResponse {
     message: string;
+    job_id: string;
     job_json: JobJsonResponse;
-    current_date: string;
 }
 
 const JobForm: React.FC = () => {
@@ -83,13 +83,13 @@ const JobForm: React.FC = () => {
                 <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 overflow-hidden">
                     <h2 className="text-xl mb-2">Response:</h2>
                     <p className="mb-2"><strong>Message:</strong> {response.message}</p>
+                    <p><strong>Job ID:</strong> {response.job_id}</p>
                     <div className="overflow-auto">
                         <p className="mb-2"><strong>Job JSON:</strong></p>
                         <pre className="bg-gray-100 rounded p-4 whitespace-pre-wrap">
                             {JSON.stringify(response.job_json, null, 2)}
                         </pre>
                     </div>
-                    <p><strong>Current Date:</strong> {response.current_date}</p>
                 </div>
             )}
         </div>

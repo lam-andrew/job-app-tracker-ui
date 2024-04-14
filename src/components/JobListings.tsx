@@ -27,10 +27,12 @@ const JobListings: React.FC = () => {
       .catch(error => console.error('Error fetching jobs:', error));
   }, []);
 
-  // Function to format the date
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString();
-  };
+  function formatDate(dateStr: string | null): string {
+    if (!dateStr) return 'N/A';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US');
+  }
+
 
   return (
     <div className='flex flex-col m-12'>
@@ -56,20 +58,18 @@ const JobListings: React.FC = () => {
           <tbody className="bg-white divide-y divide-gray-200">
             {jobs.map((job) => (
               <tr key={job.id}>
-                <td className="px-6 py-4 whitespace-nowrap">{job.job_title}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{job.company_name}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{job.location}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{job.work_format}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{job.remote_work_availability}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{formatDate(job.application_deadline)}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{formatDate(job.application_date)}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{job.salary_range}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{job.application_status}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{job.required_skills.join(', ')}</td>{/* optional for later */}
-                <td className="px-6 py-4 whitespace-nowrap">{job.benefits.join(', ')}</td>{/* optional for later */}
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{/* optional for later */}
-                  {JSON.stringify(job.additional_details, null, 2)}
-                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-left">{job.job_title ?? 'N/A'}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-left">{job.company_name ?? 'N/A'}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-left">{job.location ?? 'N/A'}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-left">{job.work_format ?? 'N/A'}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-left">{job.remote_work_availability ?? 'N/A'}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-left">{job.application_deadline ? formatDate(job.application_deadline) : 'N/A'}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-left">{job.application_date ? formatDate(job.application_date) : 'N/A'}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-left">{job.salary_range ?? 'N/A'}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-left">{job.application_status ?? 'N/A'}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-left">{job.required_skills?.join(', ') ?? 'N/A'}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-left">{job.benefits?.join(', ') ?? 'N/A'}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-left">{job.additional_details ? JSON.stringify(job.additional_details) : 'N/A'}</td>
               </tr>
             ))}
           </tbody>

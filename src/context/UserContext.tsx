@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useCallback, useEffect } from 'react';
 import { UserProfile } from '../types/UserProfile';
 import { googleLogout } from '@react-oauth/google';
-import { useNavigate } from 'react-router-dom';
 
 interface UserContextType {
     user: UserProfile | null;
@@ -15,18 +14,30 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [user, setUser] = useState<UserProfile | null>(null);
 
     useEffect(() => {
+        const storedUserData = localStorage.getItem('user');
+        if (storedUserData) {
+            setUser(JSON.parse(storedUserData));
+        }
+    }, []);
+
+    const handleSetUser = (userData: any) => {
+        localStorage.setItem('user', JSON.stringify(userData));
+        setUser(userData);
+    };
+
+    useEffect(() => {
         console.log("User state updated to: ", user);
     }, [user]);
 
-
     const logout = useCallback(() => {
+        localStorage.removeItem('user');
         googleLogout();
         setUser(null);
-    
+
     }, [setUser]);
 
     return (
-        <UserContext.Provider value={{ user, setUser, logout }}>
+        <UserContext.Provider value={{ user, setUser: handleSetUser, logout }}>
             {children}
         </UserContext.Provider>
     );

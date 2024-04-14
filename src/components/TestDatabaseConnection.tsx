@@ -15,7 +15,7 @@ const TestDatabaseConnection: React.FC = () => {
     }, []);
 
     return (
-        <div>
+        <div className='mb-12'>
             <h1>Database Connection Test</h1>
             <p>{data}</p>
         </div>

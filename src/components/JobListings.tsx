@@ -48,9 +48,9 @@ const JobListings: React.FC = () => {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Applied Date</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Salary Range</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Required Skills</th> {/* optional for later */}
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Benefits</th> {/* optional for later */}
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Additional Details</th> {/* optional for later */}
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Required Skills</th>{/* optional for later */}
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Benefits</th>{/* optional for later */}
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Additional Details</th>{/* optional for later */}
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -65,9 +65,9 @@ const JobListings: React.FC = () => {
                 <td className="px-6 py-4 whitespace-nowrap">{formatDate(job.application_date)}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{job.salary_range}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{job.application_status}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{job.required_skills.join(', ')}</td> {/* optional for later */}
-                <td className="px-6 py-4 whitespace-nowrap">{job.benefits.join(', ')}</td> {/* optional for later */}
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500"> {/* optional for later */}
+                <td className="px-6 py-4 whitespace-nowrap">{job.required_skills.join(', ')}</td>{/* optional for later */}
+                <td className="px-6 py-4 whitespace-nowrap">{job.benefits.join(', ')}</td>{/* optional for later */}
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{/* optional for later */}
                   {JSON.stringify(job.additional_details, null, 2)}
                 </td>
               </tr>

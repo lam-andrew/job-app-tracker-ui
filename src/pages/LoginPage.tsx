@@ -1,13 +1,45 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useGoogleLogin } from '@react-oauth/google';
 import googleIcon from '../assets/google.svg';
 import { FaApple, FaFacebook } from 'react-icons/fa';
+import { useUser } from '../context/UserContext';
+import axios from 'axios';
+import Profile from '../components/Profile';
+import { useNavigate } from 'react-router-dom';
 
-const LoginPage: React.FC<{ onSuccess: (response: any) => void, onError: (error: any) => void }> = ({ onSuccess, onError }) => {
+interface TokenResponse {
+    access_token: string;
+}
+
+const LoginPage: React.FC = () => {
+    const { setUser } = useUser();
+    const [tempUser, setTempUser] = useState<TokenResponse | null>(null);
+    const navigate = useNavigate();
+
     const login = useGoogleLogin({
-        onSuccess: (codeResponse) => onSuccess(codeResponse),
-        onError: (error) => onError(error),
+        onSuccess: async (codeResponse) => setTempUser(codeResponse),
+        onError: (error) => console.log('Login Failed:', error),
     });
+
+    useEffect(
+        () => {
+            if (tempUser) {
+                axios
+                    .get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${tempUser.access_token}`, {
+                        headers: {
+                            Authorization: `Bearer ${tempUser.access_token}`,
+                            Accept: 'application/json'
+                        }
+                    })
+                    .then((res) => {
+                        setUser(res.data);
+                        navigate("/mainpage");
+                    })
+                    .catch((err) => console.log(err));
+            }
+        },
+        [tempUser]
+    );
 
     return (
         <div className="flex justify-center items-center h-screen w-full bg-slate-50">
@@ -27,7 +59,7 @@ const LoginPage: React.FC<{ onSuccess: (response: any) => void, onError: (error:
                             disabled />
                     </div>
                     <button type="submit" className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700"
-                            disabled
+                        disabled
                     >
                         Log in
                     </button>

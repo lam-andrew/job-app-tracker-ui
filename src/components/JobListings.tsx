@@ -18,14 +18,14 @@ interface Job {
   additional_details: any; // This will be displayed as a JSON string
 }
 
-const JobListings: React.FC = () => {
+const JobListings: React.FC<{ refetchIndicator: number }> = ({ refetchIndicator }) => {
   const [jobs, setJobs] = useState<Job[]>([]);
 
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_BACKEND_ENDPOINT}/jobs`)
       .then(response => setJobs(response.data))
       .catch(error => console.error('Error fetching jobs:', error));
-  }, []);
+  }, [refetchIndicator]);
 
   function formatDate(dateStr: string | null): string {
     if (!dateStr) return 'N/A';
@@ -35,45 +35,47 @@ const JobListings: React.FC = () => {
 
 
   return (
-    <div className='flex flex-col m-12'>
-      <h2 className="text-xl font-semibold my-4">Job Listings</h2>
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Job Title</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Work Format</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Remote Work Avail</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">App Deadline</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Applied Date</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Salary Range</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Required Skills</th>{/* optional for later */}
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Benefits</th>{/* optional for later */}
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Additional Details</th>{/* optional for later */}
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {jobs.map((job) => (
-              <tr key={job.id}>
-                <td className="px-6 py-4 whitespace-nowrap text-left">{job.job_title ?? 'N/A'}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-left">{job.company_name ?? 'N/A'}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-left">{job.location ?? 'N/A'}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-left">{job.work_format ?? 'N/A'}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-left">{job.remote_work_availability ?? 'N/A'}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-left">{job.application_deadline ? formatDate(job.application_deadline) : 'N/A'}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-left">{job.application_date ? formatDate(job.application_date) : 'N/A'}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-left">{job.salary_range ?? 'N/A'}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-left">{job.application_status ?? 'N/A'}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-left">{job.required_skills?.join(', ') ?? 'N/A'}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-left">{job.benefits?.join(', ') ?? 'N/A'}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-left">{job.additional_details ? JSON.stringify(job.additional_details) : 'N/A'}</td>
+    <div className='flex flex-col mx-12'>
+      <h2 className="text-xl font-semibold my-4">My Job Applications</h2>
+      <div className="overflow-x-auto relative shadow-md sm:rounded-lg">
+        <div className="table-wrp block max-h-[50vh]">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-700 sticky top-0">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Job Title</th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Company</th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Location</th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Work Format</th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Remote Work Avail</th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">App Deadline</th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Applied Date</th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Salary Range</th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Required Skills</th>{/* optional for later */}
+                <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Benefits</th>{/* optional for later */}
+                {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Additional Details</th>*/}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {jobs.map((job) => (
+                <tr key={job.id} className="hover:bg-gray-100 transition duration-150 ease-in-out cursor-pointer">
+                  <td className="px-6 py-4 whitespace-nowrap text-left">{job.job_title ?? 'N/A'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-left">{job.company_name ?? 'N/A'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-left">{job.location ?? 'N/A'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-left">{job.work_format ?? 'N/A'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-left">{job.remote_work_availability ?? 'N/A'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-left">{job.application_deadline ? formatDate(job.application_deadline) : 'N/A'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-left">{job.application_date ? formatDate(job.application_date) : 'N/A'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-left">{job.salary_range ?? 'N/A'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-left">{job.application_status ?? 'N/A'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-left">{job.required_skills?.join(', ') ?? 'N/A'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-left">{job.benefits?.join(', ') ?? 'N/A'}</td>
+                  {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-left">{job.additional_details ? JSON.stringify(job.additional_details) : 'N/A'}</td> */}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

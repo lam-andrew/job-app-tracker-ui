@@ -4,7 +4,7 @@ import googleIcon from '../assets/google.svg';
 import { FaApple, FaFacebook } from 'react-icons/fa';
 import { useUser } from '../context/UserContext';
 import axios from 'axios';
-import Profile from '../components/Profile';
+import Profile from '../components/ProfileTopBar';
 import { useNavigate } from 'react-router-dom';
 
 interface TokenResponse {

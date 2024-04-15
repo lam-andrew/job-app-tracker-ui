@@ -29,9 +29,16 @@ const JobListings: React.FC<{ refetchIndicator: number }> = ({ refetchIndicator 
 
   function formatDate(dateStr: string | null): string {
     if (!dateStr) return 'N/A';
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US');
-  }
+
+    // Split the date string into its components
+    const parts = dateStr.split('-').map(part => parseInt(part, 10));
+
+    // Create a new date object using the parts. Note that months are 0-indexed.
+    const date = new Date(parts[0], parts[1] - 1, parts[2]);
+
+    // Use toLocaleDateString to format the date in a user-friendly way.
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
 
 
   return (
@@ -46,9 +53,9 @@ const JobListings: React.FC<{ refetchIndicator: number }> = ({ refetchIndicator 
                 <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Company</th>
                 <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Location</th>
                 <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Work Format</th>
-                <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Remote Work Avail</th>
-                <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">App Deadline</th>
-                <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Applied Date</th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Work Mode</th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Application Deadline</th>
+                <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Date Applied</th>
                 <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Salary Range</th>
                 <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Status</th>
                 <th className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Required Skills</th>{/* optional for later */}

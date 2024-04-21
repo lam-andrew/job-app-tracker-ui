@@ -16,7 +16,7 @@ const MainPage: React.FC = () => {
       {/* <TestDatabaseConnection /> */}
       <ProfileTopBar />
       <JobForm triggerRefetch={triggerRefetch} />
-      <JobListings refetchIndicator={refetchIndicator} />
+      <JobListings refetchIndicator={refetchIndicator} triggerRefetch={triggerRefetch} />
     </div>
   );
 };

@@ -2,7 +2,7 @@ import React, { useState, FormEvent } from 'react';
 import axios from 'axios';
 import Spinner from './Spinner';
 
-type ApplicationStatus = 
+type ApplicationStatus =
     | 'Applied'
     | 'Under Review'
     | 'Interview Scheduled'
@@ -41,7 +41,26 @@ interface ApiResponse {
 const JobForm: React.FC<{ triggerRefetch: () => void }> = ({ triggerRefetch }) => {
     const [jobDesc, setJobDesc] = useState<string>('');
     const [response, setResponse] = useState<ApiResponse | null>(null);
-    const [loading, setLoading] = useState<boolean>(false); 
+    const [loading, setLoading] = useState<boolean>(false);
+    const textAreaRef = React.useRef<HTMLTextAreaElement>(null);
+
+    const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setJobDesc(e.target.value);
+        const target = e.target;
+        const maxHeight = 300; // Maximum height in pixels
+
+        // Reset height to recalculate
+        target.style.height = 'inherit';
+
+        // Calculate the scroll height and limit it by maxHeight
+        const calculatedHeight = Math.min(target.scrollHeight, maxHeight);
+
+        // Set the height to the calculated height (or maxHeight if it's exceeded)
+        target.style.height = `${calculatedHeight}px`;
+
+        // Enable or disable scrolling based on whether the content exceeds maxHeight
+        target.style.overflowY = target.scrollHeight > maxHeight ? 'auto' : 'hidden';
+    };
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
@@ -52,7 +71,7 @@ const JobForm: React.FC<{ triggerRefetch: () => void }> = ({ triggerRefetch }) =
                 job_desc_input: jobDesc,
                 current_date: new Date().toISOString()
             });
-            setResponse(response.data)
+            setResponse(response.data);
             triggerRefetch();
         } catch (error) {
             console.error("Error sending job description:", error);
@@ -70,29 +89,18 @@ const JobForm: React.FC<{ triggerRefetch: () => void }> = ({ triggerRefetch }) =
                     </label>
                     <textarea
                         id="jobDescription"
-                        className="shadow appearance-none border rounded max-h-96 w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        ref={textAreaRef}
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline resize-none"
                         value={jobDesc}
-                        onChange={(e) => setJobDesc(e.target.value)}
+                        placeholder='Paste job description here to generate a job application entry...'
+                        onChange={handleInput}
+                        style={{ minHeight: '100px' }}  // Initial height
                     />
                 </div>
-                <button type="submit" className="text-white bg-indigo-600 hover:bg-indigo-700 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" disabled={loading}>
+                <button type="submit" className="text-white bg-indigo-600 hover:bg-indigo-700 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" disabled={loading || jobDesc.trim().length === 0}>
                     {loading ? <Spinner /> : 'Submit'}
                 </button>
             </form>
-
-            {response && (
-                <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 overflow-hidden">
-                    <h2 className="text-xl mb-2">Response:</h2>
-                    <p className="mb-2"><strong>Message:</strong> {response.message}</p>
-                    <p><strong>Job ID:</strong> {response.job_id}</p>
-                    <div className="overflow-auto">
-                        <p className="mb-2"><strong>Job JSON:</strong></p>
-                        <pre className="bg-gray-100 rounded p-4 whitespace-pre-wrap">
-                            {JSON.stringify(response.job_json, null, 2)}
-                        </pre>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };

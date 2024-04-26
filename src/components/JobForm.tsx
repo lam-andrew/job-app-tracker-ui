@@ -1,6 +1,7 @@
 import React, { useState, FormEvent } from 'react';
 import axios from 'axios';
 import Spinner from './Spinner';
+import { useUser } from '../context/UserContext';
 
 type ApplicationStatus =
     | 'Applied'
@@ -43,6 +44,7 @@ const JobForm: React.FC<{ triggerRefetch: () => void }> = ({ triggerRefetch }) =
     const [response, setResponse] = useState<ApiResponse | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const textAreaRef = React.useRef<HTMLTextAreaElement>(null);
+    const { user } = useUser();
 
     const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setJobDesc(e.target.value);
@@ -69,7 +71,8 @@ const JobForm: React.FC<{ triggerRefetch: () => void }> = ({ triggerRefetch }) =
         try {
             const response = await axios.post(`${process.env.REACT_APP_BACKEND_ENDPOINT}/insert_job`, {
                 job_desc_input: jobDesc,
-                current_date: new Date().toISOString()
+                current_date: new Date().toISOString(),
+                user_id: user?.id
             });
             setResponse(response.data);
             triggerRefetch();

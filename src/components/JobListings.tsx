@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useUser } from '../context/UserContext';
 
 interface Job {
   id: number;
@@ -58,23 +59,26 @@ const getStatusStyle = (status: string) => {
 
 const JobListings: React.FC<{ refetchIndicator: number, triggerRefetch: () => void }> = ({ refetchIndicator, triggerRefetch }) => {
   const [jobs, setJobs] = useState<Job[]>([]);
+  const { user } = useUser();
 
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_BACKEND_ENDPOINT}/jobs`)
-      .then(response => {
-        const sortedJobs = response.data.sort((a: { application_date: string | number | Date; id: number; }, b: { application_date: string | number | Date; id: number; }) => {
-          // First, compare by application_date
-          const dateComparison = new Date(a.application_date).getTime() - new Date(b.application_date).getTime();
-          if (dateComparison !== 0) {
-            return dateComparison;
-          }
-          // If dates are the same, compare by id (assuming lower id was entered first, adjust as needed)
-          return a.id - b.id;
-        });
-        setJobs(sortedJobs);
-      })
-      .catch(error => console.error('Error fetching jobs:', error));
-  }, [refetchIndicator]);
+    if (user?.id) { // Ensure there's a user id to append as a query parameter
+        axios.get(`${process.env.REACT_APP_BACKEND_ENDPOINT}/jobs`, {
+            params: { userId: user.id }
+        })
+        .then(response => {
+            const sortedJobs = response.data.sort((a: { application_date: string | number | Date; id: number; }, b: { application_date: string | number | Date; id: number; }) => {
+                const dateComparison = new Date(b.application_date).getTime() - new Date(a.application_date).getTime();
+                if (dateComparison !== 0) {
+                    return dateComparison;
+                }
+                return a.id - b.id;
+            });
+            setJobs(sortedJobs);
+        })
+        .catch(error => console.error('Error fetching jobs:', error));
+    }
+}, [refetchIndicator, user?.id]); 
 
 
   const updateJobStatus = async (jobId: number, newStatus: string) => {
@@ -149,10 +153,10 @@ const JobListings: React.FC<{ refetchIndicator: number, triggerRefetch: () => vo
                     {job.salary_range ?? 'N/A'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-left max-w-72 overflow-hidden overflow-ellipsis" title={job.required_skills?.join(', ')}>
-                    {job.required_skills ?? 'N/A'}
+                    {job.required_skills?.join(', ') ?? 'N/A'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-left max-w-72 overflow-hidden overflow-ellipsis" title={job.benefits?.join(', ')}>
-                    {job.benefits ?? 'N/A'}
+                    {job.benefits?.join(', ') ?? 'N/A'}
                   </td>
                   {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-left">{job.additional_details ? JSON.stringify(job.additional_details) : 'N/A'}</td> */}
                 </tr>

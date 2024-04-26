@@ -17,7 +17,38 @@ const LoginPage: React.FC = () => {
     const navigate = useNavigate();
 
     const login = useGoogleLogin({
-        onSuccess: async (codeResponse) => setTempUser(codeResponse),
+        onSuccess: async (codeResponse) => {
+            const { access_token } = codeResponse;
+            try {
+                // Fetch user details from Google API
+                const userInfoResponse = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${access_token}`, {
+                    headers: {
+                        Authorization: `Bearer ${access_token}`,
+                        Accept: 'application/json'
+                    }
+                });
+
+                await axios.post(`${process.env.REACT_APP_BACKEND_ENDPOINT}/create_user`, {
+                    googleId: userInfoResponse.data.id,
+                    name: userInfoResponse.data.name,
+                    email: userInfoResponse.data.email,
+                    picture: userInfoResponse.data.picture
+                });
+
+                // Set user in context
+                setUser({
+                    id: userInfoResponse.data.id,
+                    name: userInfoResponse.data.name,
+                    email: userInfoResponse.data.email,
+                    picture: userInfoResponse.data.picture
+                });
+
+                // Navigate to the main page
+                navigate("/mainpage");
+            } catch (error) {
+                console.error("Error during login or fetching user details: ", error);
+            }
+        },
         onError: (error) => console.log('Login Failed:', error),
     });
 

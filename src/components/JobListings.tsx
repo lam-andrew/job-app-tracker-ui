@@ -67,6 +67,7 @@ const JobListings: React.FC<{ refetchIndicator: number, triggerRefetch: () => vo
             params: { userId: user.id }
         })
         .then(response => {
+          console.log("RESPONSE: ", response.data);
             const sortedJobs = response.data.sort((a: { application_date: string | number | Date; id: number; }, b: { application_date: string | number | Date; id: number; }) => {
                 const dateComparison = new Date(b.application_date).getTime() - new Date(a.application_date).getTime();
                 if (dateComparison !== 0) {

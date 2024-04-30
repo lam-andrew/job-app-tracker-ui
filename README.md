@@ -1,4 +1,13 @@
-# job-app-tracker-ui
+# NextStep Tracking
+Streamline your job search with our online tool that effortlessly tracks and organizes your job applications, freeing you from the hassle of spreadsheets.
+
+# ⚙️ Tech Stack
+- [ReactTSX](https://react.dev/learn/typescript) merges React's UI-building capabilities with TypeScript's static typing to enhance development efficiency and reliability.
+- [TailwindCSS](https://tailwindcss.com/) utility-first CSS framework designed for rapidly creating custom user interfaces directly within HTML.
+- [Python Flask](https://flask.palletsprojects.com/en/3.0.x/) lightweight and flexible web app framework that simplifies the process of building scalable web applications in Python.
+- [gpt-3.5-turbo](https://platform.openai.com/docs/models) OpenAI completion model used for extracting information from transcripts
+
+## job-app-tracker-ui
 
 The frontend UI for the job application status tracker, built with React. It provides a user-friendly interface for tracking job application statuses.
 

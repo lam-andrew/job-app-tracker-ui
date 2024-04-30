@@ -73,7 +73,7 @@ const JobListings: React.FC<{ refetchIndicator: number, triggerRefetch: () => vo
                 if (dateComparison !== 0) {
                     return dateComparison;
                 }
-                return a.id - b.id;
+                return b.id - a.id;
             });
             setJobs(sortedJobs);
         })
